@@ -1,20 +1,31 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require('dotenv').config(); // Menggunakan dotenv untuk membaca variabel lingkungan dari file .env
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const express = require('express');
+const db = require('./Models');
+const userRoutes = require('./Routes/users');
+const feedbackRoutes = require('./Routes/feedback');
 
-var app = express();
+const app = express();
+const PORT = process.env.PORT || 3000; // Menggunakan PORT dari variabel lingkungan atau default ke 3000 jika tidak ada
 
-app.use(logger('dev'));
+// Middleware untuk parsing JSON
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// Gunakan rute
+app.use('/api', userRoutes);
+app.use('/api', feedbackRoutes);
 
-module.exports = app;
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
+// Sync database
+db.sequelize.sync({ force: false }).then(() => {
+    console.log('Database synchronized');
+
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+}).catch(err => {
+    console.error('Unable to sync database:', err);
+});
