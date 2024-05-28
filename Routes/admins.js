@@ -6,8 +6,8 @@ const {
   login,
   me,
   logout,
-} = require("../Controllers/authControllerUsers");
-const authentication = require("../Middleware/authenticationUsers");
+} = require("../Controllers/authControllerAdmins");
+const authentication = require("../Middleware/authenticationAdmins");
 
 // Routes
 router.post("/register", register);

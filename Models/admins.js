@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-  const users = sequelize.define(
-    "users",
+  const admins = sequelize.define(
+    "admins",
     {
       id: {
         allowNull: false,
@@ -35,8 +35,15 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      tableName: "users",
+      tableName: "admins",
     }
   );
-  return users;
+
+  admins.associate = (models) => {
+    admins.hasMany(models.events, {
+      foreignKey: "eventCreateBy",
+    });
+  };
+
+  return admins;
 };
